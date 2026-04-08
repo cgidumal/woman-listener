@@ -13,14 +13,14 @@ const ROASTS: Record<Tier, string[]> = {
   F: [
     "Your Spotify is a sausage fest. The algorithm is begging you to discover that non-men also make music.",
     "Zero non-men? Not even by accident? That takes commitment.",
-    "The only non-male voice on your Spotify is Siri reading you the error message.",
-    "Genuinely impressive how you managed to avoid half of all artists.",
+    "You somehow mass-unfollowed an entire gender. Respect the dedication, honestly.",
+    "Genuinely impressive how you managed to avoid over half of all artists.",
   ],
   D: [
     "You found a couple non-male artists. Probably by accident. Probably Adele.",
     "The bar was on the floor and you barely cleared it.",
     "Your Spotify's idea of gender diversity is listening to a band with a female backup vocalist.",
-    "You listen to non-men the way you read terms and conditions — technically, barely.",
+    "Your idea of female representation is hearing a woman sampled in an EDM drop.",
   ],
   C: [
     "Solidly mid. You listen to non-men the way you 'support' them — occasionally, when convenient.",
@@ -31,13 +31,13 @@ const ROASTS: Record<Tier, string[]> = {
   B: [
     "Your Spotify is like a group project where you did some of the work. Some.",
     "You're giving 'I have female friends' energy. Like, technically true. Technically.",
-    "You've discovered women make music. Now discover more of them. We believe in you. Barely.",
+    "You've discovered women make music. Now discover more of them. We believe in you.",
     "Somewhere between 'I respect women' and actually proving it. The algorithm is doing the heavy lifting here.",
   ],
   A: [
     "OK we see you. Your Spotify looks like it was curated by someone who's been to therapy. Congratulations on your growth.",
-    "You're the friend everyone trusts with the aux. Don't let it go to your head. Too late.",
-    "Your taste in music is better than your taste in literally everything else. Statistically speaking.",
+    "You're the friend everyone trusts with the aux. Don't let it go to your head.",
+    "You listen to women like you actually like them. Weird flex for most people, normal for you.",
     "A-tier means you listen to women almost as much as you talk about listening to women. Almost.",
   ],
   S: [

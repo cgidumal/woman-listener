@@ -29,9 +29,9 @@ const ROASTS: Record<Tier, string[]> = {
     "Not terrible, not great. Like lukewarm water. You are lukewarm water.",
   ],
   B: [
-    "You'd pass if this were a test. It's not a test. It's a vibe check. You're giving substitute teacher energy.",
     "Your Spotify is like a group project where you did some of the work. Some.",
-    "You listen to women the way you eat vegetables. Enough to not die, not enough to brag about.",
+    "You're giving 'I have female friends' energy. Like, technically true. Technically.",
+    "You've discovered women make music. Now discover more of them. We believe in you. Barely.",
     "Somewhere between 'I respect women' and actually proving it. The algorithm is doing the heavy lifting here.",
   ],
   A: [

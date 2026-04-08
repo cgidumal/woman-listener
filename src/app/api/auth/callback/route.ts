@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 600, // 10 minutes
+      maxAge: 3600, // 1 hour (matches Spotify token lifetime)
       path: "/",
     });
 

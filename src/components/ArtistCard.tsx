@@ -31,7 +31,12 @@ export default function ArtistCard({ artist }: { artist: ArtistWithGender }) {
           {badge.label}
         </span>
       </div>
-      <span className="text-sm font-medium truncate">{artist.name}</span>
+      <div className="min-w-0 flex-1">
+        <span className="text-sm font-medium truncate block">{artist.name}</span>
+        {artist.rank && (
+          <span className="text-[10px] text-text-muted">#{artist.rank} most played</span>
+        )}
+      </div>
     </div>
   );
 }

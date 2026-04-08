@@ -4,6 +4,7 @@ export interface SpotifyArtist {
   images: { url: string; height: number; width: number }[];
   genres: string[];
   popularity: number;
+  rank?: number; // position in top artists (1 = most listened)
 }
 
 export interface ArtistWithGender extends SpotifyArtist {
@@ -22,6 +23,7 @@ export interface AnalysisResult {
   maleCount: number;
   unknownCount: number;
   percentage: number;
+  weightedPercentage: number;
   tier: Tier;
   roast: string;
   mode: "lookup" | "full";

@@ -11,39 +11,39 @@ const TIER_THRESHOLDS: { min: number; tier: Tier }[] = [
 
 const ROASTS: Record<Tier, string[]> = {
   F: [
-    "Your Spotify is a sausage fest. The algorithm is begging you to discover that women also make music.",
-    "Zero women? Not even by accident? That takes commitment.",
-    "The only female voice on your Spotify is Siri reading you the error message.",
-    "Genuinely impressive how you managed to avoid 50% of all artists.",
+    "Your Spotify is a sausage fest. The algorithm is begging you to discover that non-men also make music.",
+    "Zero non-men? Not even by accident? That takes commitment.",
+    "The only non-male voice on your Spotify is Siri reading you the error message.",
+    "Genuinely impressive how you managed to avoid half of all artists.",
   ],
   D: [
-    "You found a couple women artists. Probably by accident. Probably Adele.",
+    "You found a couple non-male artists. Probably by accident. Probably Adele.",
     "The bar was on the floor and you barely cleared it.",
     "Your Spotify's idea of gender diversity is listening to a band with a female backup vocalist.",
-    "You listen to women the way you read terms and conditions — technically, barely.",
+    "You listen to non-men the way you read terms and conditions — technically, barely.",
   ],
   C: [
-    "Solidly mid. You listen to women the way you 'support' women — occasionally, when convenient.",
-    "You acknowledge women exist in music. Congratulations on the bare minimum.",
+    "Solidly mid. You listen to non-men the way you 'support' them — occasionally, when convenient.",
+    "You acknowledge non-men exist in music. Congratulations on the bare minimum.",
     "Perfectly mediocre. You're the participation trophy of music taste.",
     "Not terrible, not great. Like lukewarm water. You are lukewarm water.",
   ],
   B: [
-    "Not bad. You've clearly heard of women. Some of your playlists might even pass the vibe check.",
+    "Not bad. You've clearly heard of women and non-binary artists.",
     "Above average! Your Spotify has more range than most people's personalities.",
     "Decent taste. You actually seek out music instead of just letting the algorithm feed you slop.",
     "You're doing better than most. Low bar, but hey.",
   ],
   A: [
-    "You actually listen to women. Like, genuinely. This is rare. Your ears have taste.",
-    "Impressive range. You treat women in music like they're… regular artists. Revolutionary concept.",
-    "Your Spotify has almost as many women as a Beyoncé concert. Almost.",
+    "You actually listen to non-men. Like, genuinely. This is rare. Your ears have taste.",
+    "Impressive range. You treat women and non-binary artists like they're… regular artists. Revolutionary concept.",
+    "Your Spotify has almost as many non-men as a Beyoncé concert. Almost.",
     "You're proof that having good taste isn't that hard — most people just refuse.",
   ],
   S: [
-    "You are the moment. Your Spotify is a feminist utopia. Someone give this person a medal.",
+    "You are the moment. Your Spotify is an inclusive utopia. Someone give this person a medal.",
     "Your playlist is more inclusive than most corporate diversity initiatives.",
-    "You don't just listen to women — you're a patron of the arts. Iconic behavior.",
+    "You don't just listen to non-men — you're a patron of the arts. Iconic behavior.",
     "We have nothing to roast. You're out here actually listening. A unicorn in the wild.",
   ],
 };
@@ -66,20 +66,50 @@ export function calculateScore(
   stats?: AnalysisResult["stats"]
 ): AnalysisResult {
   const known = artists.filter((a) => a.gender !== "unknown");
-  const female = known.filter((a) => a.gender === "female");
+  const nonMen = known.filter(
+    (a) => a.gender === "female" || a.gender === "non-binary"
+  );
   const male = known.filter((a) => a.gender === "male");
   const unknown = artists.filter((a) => a.gender === "unknown");
+
+  // Simple percentage (unweighted)
   const percentage =
-    known.length > 0 ? Math.round((female.length / known.length) * 100) : 0;
-  const tier = getTier(percentage);
+    known.length > 0 ? Math.round((nonMen.length / known.length) * 100) : 0;
+
+  // Weighted percentage: top-ranked artists count more
+  // Weight = 51 - rank (so #1 = 50 weight, #50 = 1 weight)
+  // Artists without a rank (from saved/followed, not top) get weight 1
+  let weightedNonMen = 0;
+  let weightedTotal = 0;
+  for (const a of known) {
+    const weight = a.rank ? Math.max(1, 51 - a.rank) : 1;
+    weightedTotal += weight;
+    if (a.gender === "female" || a.gender === "non-binary") {
+      weightedNonMen += weight;
+    }
+  }
+  const weightedPercentage =
+    weightedTotal > 0 ? Math.round((weightedNonMen / weightedTotal) * 100) : 0;
+
+  // Use weighted percentage for the tier/roast
+  const tier = getTier(weightedPercentage);
+
+  // Sort artists: ranked first (by rank), then unranked
+  const sorted = [...artists].sort((a, b) => {
+    if (a.rank && b.rank) return a.rank - b.rank;
+    if (a.rank) return -1;
+    if (b.rank) return 1;
+    return 0;
+  });
 
   return {
-    artists,
+    artists: sorted,
     totalKnown: known.length,
-    femaleCount: female.length,
+    femaleCount: nonMen.length,
     maleCount: male.length,
     unknownCount: unknown.length,
     percentage,
+    weightedPercentage,
     tier,
     roast: getRoast(tier),
     mode,

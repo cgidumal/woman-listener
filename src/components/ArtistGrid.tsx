@@ -6,21 +6,22 @@ export default function ArtistGrid({
 }: {
   artists: ArtistWithGender[];
 }) {
-  const female = artists.filter((a) => a.gender === "female");
-  const male = artists.filter((a) => a.gender === "male");
-  const unknown = artists.filter(
-    (a) => a.gender === "unknown" || a.gender === "non-binary"
+  // Non-men = female + non-binary (the good stuff)
+  const nonMen = artists.filter(
+    (a) => a.gender === "female" || a.gender === "non-binary"
   );
+  const male = artists.filter((a) => a.gender === "male");
+  const unknown = artists.filter((a) => a.gender === "unknown");
 
   return (
     <div
       className="space-y-8 animate-slide-up w-full"
       style={{ animationDelay: "0.6s", opacity: 0 }}
     >
-      {female.length > 0 && (
+      {nonMen.length > 0 && (
         <Section
-          title={`${female.length} women`}
-          artists={female}
+          title={`${nonMen.length} non-men`}
+          artists={nonMen}
           accentColor="text-female"
         />
       )}
@@ -33,7 +34,7 @@ export default function ArtistGrid({
       )}
       {unknown.length > 0 && (
         <Section
-          title={`${unknown.length} unknown / bands`}
+          title={`${unknown.length} unknown`}
           artists={unknown}
           accentColor="text-unknown"
         />

@@ -82,7 +82,11 @@ async function spotifyGet(path: string, token: string) {
   const res = await fetch(`${SPOTIFY_API_BASE}${path}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (!res.ok) throw new Error(`Spotify API ${path} failed: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error(`[spotify] ${path} failed: ${res.status} ${body}`);
+    throw new Error(`Spotify API ${path} failed: ${res.status}`);
+  }
   return res.json();
 }
 
@@ -120,7 +124,7 @@ export async function fetchSavedTracks(token: string): Promise<SpotifyArtist[]> 
   const artistMap = new Map<string, SpotifyArtist>();
   let url = "/me/tracks?limit=50";
   let pages = 0;
-  const maxPages = 40; // cap at 2000 tracks
+  const maxPages = 10; // cap at 500 tracks for speed
 
   while (url && pages < maxPages) {
     const data = await spotifyGet(url, token);
@@ -211,11 +215,10 @@ export function extractUserId(input: string): string | null {
   return null;
 }
 
-export async function fetchPublicPlaylists(userId: string): Promise<{
+export async function fetchPublicPlaylists(userId: string, token: string): Promise<{
   artists: SpotifyArtist[];
   playlistCount: number;
 }> {
-  const token = await getClientToken();
   const artistMap = new Map<string, SpotifyArtist>();
 
   const playlistData = await spotifyGet(`/users/${userId}/playlists?limit=50`, token);

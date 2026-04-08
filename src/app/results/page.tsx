@@ -18,7 +18,7 @@ export default function ResultsPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState<string>("long_term");
+  const [timeRange, setTimeRange] = useState<string>("medium_term");
 
   function fetchResults(range: string) {
     setLoading(true);

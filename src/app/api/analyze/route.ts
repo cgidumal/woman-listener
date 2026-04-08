@@ -10,7 +10,7 @@ import { queryArtistGenders } from "@/lib/wikidata";
 import { calculateScore } from "@/lib/scoring";
 import { SpotifyArtist, ArtistWithGender } from "@/lib/types";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("spotify_token")?.value;
@@ -22,34 +22,29 @@ export async function GET() {
       );
     }
 
-    // Fetch everything in parallel
-    const [topShort, topMedium, topLong, recent, saved, followed] =
+    const url = new URL(request.url);
+    const timeRange = url.searchParams.get("time_range") || "long_term";
+
+    // Fetch top artists for selected time range + supplementary data
+    const [topArtists, recent, saved, followed] =
       await Promise.allSettled([
-        fetchTopArtists(token, "short_term"),
-        fetchTopArtists(token, "medium_term"),
-        fetchTopArtists(token, "long_term"),
+        fetchTopArtists(token, timeRange as "short_term" | "medium_term" | "long_term"),
         fetchRecentlyPlayed(token),
         fetchSavedTracks(token),
         fetchFollowedArtists(token),
       ]);
 
-    // Assign ranks from top artists (best rank across all time ranges)
+    // Assign ranks from the selected time range
     const artistRanks = new Map<string, number>();
-    for (const result of [topShort, topMedium, topLong]) {
-      if (result.status === "fulfilled") {
-        result.value.forEach((artist, index) => {
-          const existing = artistRanks.get(artist.id);
-          const rank = index + 1;
-          if (!existing || rank < existing) {
-            artistRanks.set(artist.id, rank);
-          }
-        });
-      }
+    if (topArtists.status === "fulfilled") {
+      topArtists.value.forEach((artist, index) => {
+        artistRanks.set(artist.id, index + 1);
+      });
     }
 
     // Deduplicate all artists by ID
     const artistMap = new Map<string, SpotifyArtist>();
-    for (const result of [topShort, topMedium, topLong, recent, saved, followed]) {
+    for (const result of [topArtists, recent, saved, followed]) {
       if (result.status === "fulfilled") {
         for (const artist of result.value) {
           if (!artistMap.has(artist.id)) {

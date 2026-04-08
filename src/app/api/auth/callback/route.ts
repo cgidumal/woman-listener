@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     const accessToken = await exchangeCodeForToken(code);
 
     const response = NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/results?mode=full`
+      `${process.env.NEXT_PUBLIC_APP_URL}/results`
     );
 
     // Store token in httpOnly cookie

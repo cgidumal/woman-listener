@@ -29,10 +29,10 @@ const ROASTS: Record<Tier, string[]> = {
     "Not terrible, not great. Like lukewarm water. You are lukewarm water.",
   ],
   B: [
-    "Not bad. You've clearly heard of women and non-binary artists.",
-    "Above average! Your Spotify has more range than most people's personalities.",
-    "Decent taste. You actually seek out music instead of just letting the algorithm feed you slop.",
-    "You're doing better than most. Low bar, but hey.",
+    "You're like a guy who owns one cookbook. Progress, but we're not throwing a parade.",
+    "Congrats, you've cleared the bar most men trip over. Your mother would be mildly proud.",
+    "You listen to enough women to have opinions about them but not enough to be interesting.",
+    "B for barely trying but somehow still beating the curve. The curve is underground.",
   ],
   A: [
     "You actually listen to non-men. Like, genuinely. This is rare. Your ears have taste.",
